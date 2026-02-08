@@ -14,7 +14,7 @@ SERVER_PORT = 30033
 def get_server_status():
     try:
         # الاتصال بسيرفر بيدروك
-        server = BedrockServer.lookup(f"{SERVER_IP}:{SERVER_PORT}")
+        server = BedrockServer.lookup(f"{Morgmc.ddns.net:30033}:{30033}")
         status = server.status()
         
         # محاولة جلب أسماء اللاعبين (قد لا تظهر في بيدروك دائماً حسب إعدادات السيرفر)
