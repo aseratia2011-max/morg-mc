@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morg MC - Official Server</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+
+    <header>
+        <div class="logo-container">
+            <h1 class="logo">MORG <span class="highlight">MC</span></h1>
+        </div>
+        
+        <div class="server-stats" id="server-status-box">
+            <div class="status-indicator">
+                <span class="dot loading"></span>
+                <span id="status-text">جاري الاتصال...</span>
+            </div>
+            <div class="player-count">
+                <i class="fas fa-users"></i>
+                <span id="online-players">--</span> / <span id="max-players">--</span>
+            </div>
+            <div class="ping-stats" id="ping-stats" style="display:none; font-size: 0.8rem; color: #ccc;">
+                Ping: <span id="ping-value">0</span>ms
+            </div>
+        </div>
+
+        <a href="#store" class="nav-btn store-btn">
+            <i class="fas fa-gem"></i> المتجر
+        </a>
+    </header>
+
+    <main class="container">
+        
+        <div class="hero-section">
+            
+            <div class="glass-card players-list">
+                <h3><i class="fas fa-list-ol"></i> المتصلين الآن</h3>
+                <div class="scrollable-list">
+                    <div id="players-container">
+                        <p style="text-align:center; color:#ccc; padding:20px;">
+                            جاري جلب البيانات من السيرفر...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card description">
+                <div class="desc-en">
+                    <h2>Welcome to Morg MC</h2>
+                    <p>
+                        The ultimate Bedrock experience. Join a world of custom PvP, 
+                        economy, and endless adventures. Our server is optimized for 
+                        performance and community engagement. 
+                        <strong>IP: mormc.ddns.net | Port: 30033</strong>
+                    </p>
+                </div>
+                <hr>
+                <div class="desc-ar">
+                    <h2>عن سيرفر Morg MC</h2>
+                    <p>
+                        مرحباً بكم في أقوى سيرفر ماين كرافت (بيدروك). نقدم لكم تجربة لعب فريدة تجمع بين الحماس والمتعة.
+                        سيرفرنا يعمل بنظام حماية متطور، فعاليات يومية، ومجتمع عربي متكامل.
+                        انضم إلينا الآن واصنع مجدك الخاص!
+                    </p>
+                </div>
+                
+                <div class="ip-copier" onclick="copyIP()">
+                    <span id="ip-text">mormc.ddns.net:30033</span>
+                    <i class="fas fa-copy"></i>
+                </div>
+            </div>
+        </div>
+
+        <section id="store">
+            <h2 class="section-header">Store - متجر السيرفر</h2>
+            
+            <div class="category-label">الرتب (Ranks)</div>
+            <div class="grid-container">
+                <div class="store-item rank-mg">
+                    <div class="item-header">MG+</div>
+                    <ul class="features">
+                        <li><i class="fas fa-check"></i> أوامر: /back, /fly, /nick</li>
+                        <li><i class="fas fa-gift"></i> كيت: MG Kit</li>
+                    </ul>
+                    <div class="price-tag">50 جنيه <small>400</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+
+                <div class="store-item rank-legend">
+                    <div class="item-header">Legend</div>
+                    <ul class="features">
+                        <li><i class="fas fa-check"></i> أوامر: /back, /fly</li>
+                        <li><i class="fas fa-gift"></i> كيت: Legend Kit</li>
+                    </ul>
+                    <div class="price-tag">25 جنيه <small>50</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+
+                <div class="store-item rank-vip">
+                    <div class="item-header">VIP</div>
+                    <ul class="features">
+                        <li><i class="fas fa-check"></i> أمر: /fly</li>
+                        <li><i class="fas fa-gift"></i> كيت: VIP Kit</li>
+                    </ul>
+                    <div class="price-tag">20 جنيه <small>25</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+            </div>
+
+            <div class="category-label">الأدوات (Tools)</div>
+            <div class="grid-container">
+                <div class="store-item item-tool">
+                    <div class="item-header">Morgo Axe</div>
+                    <p class="desc">تكسر الشجرة بضربة واحدة</p>
+                    <div class="price-tag">15 جنيه <small>30</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+                <div class="store-item item-tool">
+                    <div class="item-header">Morgo Pickaxe</div>
+                    <p class="desc">تكسر منطقة 3x3</p>
+                    <div class="price-tag">15 جنيه <small>30</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+            </div>
+
+            <div class="category-label">المفاتيح (Keys & Crates)</div>
+            <div class="grid-container">
+                <div class="store-item item-key">
+                    <div class="item-header">Prime Key</div>
+                    <div class="price-tag">30 جنيه <small>50</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+                <div class="store-item item-key">
+                    <div class="item-header">Crimson Crate</div>
+                    <div class="price-tag">20 جنيه <small>40</small></div>
+                    <button class="buy-btn">اشتر الآن</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://discord.com/invite/XUYnqMamUz" target="_blank" class="discord"><i class="fab fa-discord"></i></a>
+            <a href="https://www.youtube.com/@morgmc1" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
+            <a href="https://t.me/morgmc_group" target="_blank" class="telegram"><i class="fab fa-telegram"></i></a>
+        </div>
+        <p>Copyright © 2025-2026 Morg MC</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
