@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from mcstatus import BedrockServer
+from mcstatus import javaServer
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # إعدادات السيرفر
-SERVER_IP = "mormc.ddns.net"
+SERVER_IP = "Morgmc.ddns.net:30033"
 SERVER_PORT = 30033
 
 @app.route('/api/status')
@@ -36,4 +36,5 @@ def get_server_status():
 if __name__ == '__main__':
     # تشغيل السيرفر المحلي
     print("Backend is running...")
+
     app.run(debug=True, port=5000)
