@@ -1,56 +1,76 @@
 from flask import Flask, jsonify
-from mcstatus import MinecraftServer, BedrockServer
+from mcstatus import JavaServer, BedrockServer
 from flask_cors import CORS
+import sys
 
 app = Flask(__name__)
-CORS(app) # للسماح للموقع بالاتصال بالبايثون
+# السماح للاتصال من أي مصدر (حل مشكلة CORS)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-# الإعدادات من الصور المرفقة
+# إعدادات السيرفر
 SERVER_IP = "morgmc.ddns.net"
-PORT = 30033
+SERVER_PORT = 30033
 
-@app.route('/api/status')
+@app.route('/api/status', methods=['GET'])
 def get_server_status():
-    status_data = {
+    print(f"--> جاري فحص السيرفر: {SERVER_IP}:{SERVER_PORT}...", file=sys.stderr)
+    
+    response_data = {
         "online": False,
         "players_online": 0,
         "players_max": 0,
-        "version": "Unknown",
         "latency": 0,
-        "platform": ""
+        "version": "Unknown",
+        "type": "Offline"
     }
 
+    # المحاولة الأولى: اتصال Bedrock (الأكثر احتمالاً لهذا البورت)
     try:
-        # محاولة الاتصال كـ Java أولاً (كما في الصورة morgmc.ddns.net:30033)
-        try:
-            java_server = MinecraftServer.lookup(f"{SERVER_IP}:{PORT}")
-            status = java_server.status()
-            status_data.update({
-                "online": True,
-                "players_online": status.players.online,
-                "players_max": status.players.max,
-                "version": status.version.name,
-                "latency": round(status.latency),
-                "platform": "Java"
-            })
-        except:
-            # إذا فشل الجافا، نحاول الاتصال كـ Bedrock (morgmc.ddns.net بورت 30033)
-            bedrock_server = BedrockServer.lookup(f"{SERVER_IP}:{PORT}")
-            status = bedrock_server.status()
-            status_data.update({
-                "online": True,
-                "players_online": status.players_online,
-                "players_max": status.players_max,
-                "version": status.version.name,
-                "latency": round(status.latency * 1000),
-                "platform": "Bedrock"
-            })
+        print("   [1] محاولة اتصال Bedrock...", file=sys.stderr)
+        server = BedrockServer.lookup(f"{SERVER_IP}:{SERVER_PORT}")
+        status = server.status()
+        
+        response_data = {
+            "online": True,
+            "players_online": status.players_online,
+            "players_max": status.players_max,
+            "latency": round(status.latency * 1000), # تحويل للـ ms
+            "version": status.version.name,
+            "type": "Bedrock"
+        }
+        print("   ✓ تم الاتصال بنجاح (Bedrock)!", file=sys.stderr)
+        return jsonify(response_data)
 
-        return jsonify(status_data)
+    except Exception as e_bedrock:
+        print(f"   X فشل Bedrock: {e_bedrock}", file=sys.stderr)
 
-    except Exception as e:
-        return jsonify({"online": False, "error": str(e)})
+    # المحاولة الثانية: اتصال Java (في حال كان سيرفر جافا ببورت مخصص)
+    try:
+        print("   [2] محاولة اتصال Java...", file=sys.stderr)
+        server = JavaServer.lookup(f"{SERVER_IP}:{SERVER_PORT}")
+        status = server.status()
+        
+        response_data = {
+            "online": True,
+            "players_online": status.players.online,
+            "players_max": status.players.max,
+            "latency": round(status.latency),
+            "version": status.version.name,
+            "type": "Java"
+        }
+        print("   ✓ تم الاتصال بنجاح (Java)!", file=sys.stderr)
+        return jsonify(response_data)
+
+    except Exception as e_java:
+        print(f"   X فشل Java: {e_java}", file=sys.stderr)
+
+    # إذا فشل الاثنين
+    print("--> السيرفر يبدو مغلقاً أو العنوان خاطئ.", file=sys.stderr)
+    return jsonify(response_data)
 
 if __name__ == '__main__':
-    print(f"Server Checker Running for {SERVER_IP}:{PORT}...")
+    print("=========================================")
+    print(f"Server Monitor Running on port 5000")
+    print(f"Targeting: {SERVER_IP}:{SERVER_PORT}")
+    print("=========================================")
     app.run(debug=True, port=5000)
